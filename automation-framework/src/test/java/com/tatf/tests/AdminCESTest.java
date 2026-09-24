@@ -12,16 +12,12 @@ public class AdminCESTest {
     private IBrowser browser;
 
 
-    // =========================================================
-    // SE EJECUTA ANTES DE CADA TEST
-    // =========================================================
-
     @BeforeEach
     void beforeEach() {
 
         browser = BrowserFactory.getBrowser(true);
 
-        // Entrar a AdminCES
+        // Ingresar a AdminCES
         browser.interaction()
                 .navigateTo("http://cestore.ces.com.uy/adminces/");
 
@@ -30,20 +26,15 @@ public class AdminCESTest {
                 .id("pass")
                 .write("3)ea60e0be3ba12c6ecd%7297868%5c4");
 
-        // Presionar Ingresar
         browser.find()
                 .css("#loginForm button[type='submit']")
                 .click();
 
-        // Esperar pantalla principal
         browser.wait("Registrarse").link();
     }
 
 
-    // =========================================================
-    // TEST 1 - CREAR CUENTA ADMINISTRADOR
-    // =========================================================
-
+    // Crear cuenta Administrador
     @Test
     void crearCuentaAdministrador() {
 
@@ -95,10 +86,7 @@ public class AdminCESTest {
     }
 
 
-    // =========================================================
-    // TEST 2 - REINICIAR CONTRASEÑA
-    // =========================================================
-
+    // Reiniciar contraseña
     @Test
     void reiniciarContrasena() {
 
@@ -138,10 +126,7 @@ public class AdminCESTest {
     }
 
 
-    // =========================================================
-    // TEST 3 - CREAR CUENTA TESTER
-    // =========================================================
-
+    // Crear cuenta Tester
     @Test
     void crearCuentaTester() {
 
@@ -195,38 +180,26 @@ public class AdminCESTest {
     }
 
 
-    // =========================================================
-    // TEST 4 - ELIMINAR CUENTA TESTER
-    // =========================================================
-
+    // Eliminar cuenta Tester
     @Test
     void eliminarCuentaTester() {
 
         String correoTester = "cynthia.eliminar.ces@gmail.com";
 
-        // Login administrador
         iniciarSesionAdministrador();
 
-        // Crear usuario dentro de este mismo test
         crearTesterParaEliminar(correoTester);
 
-        // Ir a Ver usuarios
         browser.find()
                 .link("Ver usuarios")
                 .click();
 
         browser.wait("dataTable").id();
 
-        // Ubicar usuario
         ubicarUsuarioPorCorreo(correoTester);
 
-        // Botón eliminar de la fila correspondiente
         browser.find()
-                .xpath(
-                        "//tr[td[contains(text(),'" +
-                                correoTester +
-                                "')]]//button"
-                )
+                .xpath("//tr[td[contains(text(),'" + correoTester + "')]]//button")
                 .click();
 
         browser.wait("swal2-html-container").id();
@@ -241,14 +214,12 @@ public class AdminCESTest {
                 "No se mostró la confirmación para eliminar el usuario esperado."
         );
 
-        // Confirmar
         browser.find()
                 .css("button.swal2-confirm")
                 .click();
 
         browser.wait(
-                "//div[@id='swal2-html-container' " +
-                        "and contains(text(),'Usuario eliminado.')]"
+                "//div[@id='swal2-html-container' and contains(text(),'Usuario eliminado.')]"
         ).xpath();
 
         String mensajeObtenido = browser.find()
@@ -263,10 +234,7 @@ public class AdminCESTest {
     }
 
 
-    // =========================================================
-    // FUNCIÓN AUXILIAR - INICIAR SESIÓN ADMINISTRADOR
-    // =========================================================
-
+    // Iniciar sesión como Administrador
     private void iniciarSesionAdministrador() {
 
         browser.interaction()
@@ -310,10 +278,7 @@ public class AdminCESTest {
     }
 
 
-    // =========================================================
-    // FUNCIÓN AUXILIAR - CREAR TESTER PARA ELIMINAR
-    // =========================================================
-
+    // Crear Tester necesario para el test de eliminación
     private void crearTesterParaEliminar(String correo) {
 
         browser.find()
@@ -370,10 +335,7 @@ public class AdminCESTest {
     }
 
 
-    // =========================================================
-    // FUNCIÓN AUXILIAR - UBICAR USUARIO POR CORREO
-    // =========================================================
-
+    // Ubicar usuario por correo
     private void ubicarUsuarioPorCorreo(String correo) {
 
         browser.wait(
@@ -381,10 +343,6 @@ public class AdminCESTest {
         ).xpath();
     }
 
-
-    // =========================================================
-    // SE EJECUTA DESPUÉS DE CADA TEST
-    // =========================================================
 
     @AfterEach
     void afterEach() {
